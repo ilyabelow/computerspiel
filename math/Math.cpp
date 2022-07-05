@@ -11,3 +11,12 @@ float operator ""_o(unsigned long long int x) {
 float operator ""_o(long double x) {
     return static_cast<float>(x) / 180.f * F_PI;
 }
+float random_0_1() {
+    return static_cast<float>(std::rand()) / RAND_MAX;
+}
+int randomInt(int from, int to) {
+    return from + static_cast<int>(random_0_1() * (to - from));
+}
+float randomFloat(float from, float to) {
+    return from + random_0_1() * (to - from);
+}

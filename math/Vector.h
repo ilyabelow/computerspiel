@@ -26,6 +26,9 @@ struct Vector {
     [[nodiscard]] float operator*(const Vector& other) const;
     [[nodiscard]] float operator%(const Vector& other) const;
 
+    [[nodiscard]] bool operator<(const Vector& other) const;
+    [[nodiscard]] bool operator>(const Vector& other) const;
+
     [[nodiscard]] float norm2() const;
     [[nodiscard]] float norm() const;
     [[nodiscard]] float angle() const;

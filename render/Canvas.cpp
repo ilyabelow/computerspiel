@@ -14,10 +14,10 @@ void Canvas::placePixel(Point p, Color c) {
 }
 
 void Canvas::placePixel(int x, int y, Color c) {
-    if (x < 0 || y < 0 || x >= height || y >= width) {
+    if (x < 0 || y < 0 || x >= width || y >= height) {
         return;
     }
-    *(buffer + y + x * width) = c.getBytes();
+    *(buffer + y * width + x) = c.getBytes();
 }
 
 void Canvas::clean() {

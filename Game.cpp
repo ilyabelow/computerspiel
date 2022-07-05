@@ -18,7 +18,11 @@ std::shared_ptr<Game> gameGlobal;
 
 // initialize game data in this function
 void initialize() {
-    gameGlobal = std::make_shared<Game>(Canvas(reinterpret_cast<uint32_t *>(buffer), SCREEN_WIDTH, SCREEN_HEIGHT));
+    gameGlobal = std::make_shared<Game>(
+        Canvas(reinterpret_cast<uint32_t *>(buffer), SCREEN_WIDTH, SCREEN_HEIGHT),
+        Vector(0, 0),
+        Vector(SCREEN_WIDTH, SCREEN_HEIGHT)
+        );
     gameGlobal->init();
 }
 

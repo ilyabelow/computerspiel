@@ -19,19 +19,31 @@ typedef std::weak_ptr<Game> GamePtr;
 
 class Game: public std::enable_shared_from_this<Game> {
 public:
-    Game(Canvas canvas);
+    Game(Canvas canvas, Vector r1, Vector r2);
 
     void init();
 
     void act(float dt);
-
     void draw();
 
+    template <typename T, typename... Args>
+    void add(Args&&... args) {
+        EntityPtr entity = std::make_shared<T>(weak_from_this(), std::forward<Args>(args)...);
+        newEntities.push_back(entity);
+    }
+
     Canvas& getCanvas();
+
+    const Vector upLeftCorner;
+    const Vector downRightCorner;
+
 private:
+
     Canvas canvas;
+    std::vector<std::vector<EntityWeakPtr>> layers;
 
     std::vector<EntityPtr> entities{};
+    std::vector<EntityPtr> newEntities{};
 };
 
 

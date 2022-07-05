@@ -7,21 +7,31 @@
 
 #include "Entity.h"
 #include "../math/Vector.h"
+#include "../utils/Clock.h"
 
 class Player : public Entity {
 public:
-    explicit Player(GamePtr &&game, Vector pos) : Entity(std::move(game)),
-                                                  pos(pos) {}
+    Player(const GamePtr &game, Vector pos);
 
     void draw() override;
     void act(float dt) override;
 
     ~Player() override = default;
 private:
-    Vector pos;
+    void move(float dt);
+    void shoot();
+    void exhaust();
 
-    float thrust = 100;
+    Vector pos;
     Vector vel{};
+    Vector pull{};
+
+    Clock exaustCooldown;
+    Clock gunCooldown;
+
+    const float THRUST = 1000;
+    const float RESISTANCE = 3;
+    const int RADIUS = 20;
 };
 
 #endif //COMPUTERSPIEL_PLAYER_H

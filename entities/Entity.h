@@ -10,19 +10,34 @@
 class Entity;
 
 typedef std::shared_ptr<Entity> EntityPtr;
+typedef std::weak_ptr<Entity> EntityWeakPtr;
 
 #include "../core/Game.h"
 
 class Entity {
 public:
-    Entity(GamePtr&& game): game(std::move(game)) {}
+    Entity(const GamePtr& game): game(game) {}
 
     virtual void draw() = 0;
     virtual void act(float dt) = 0;
 
+    bool isTrash() {
+        return toTrash;
+    }
+
     virtual ~Entity() = default;
 protected:
+    void trash() {
+        toTrash = true;
+    }
+    std::shared_ptr<Game> context() {
+        return game.lock();
+    }
+
+private:
     GamePtr game;
+
+    bool toTrash = false;
 };
 
 

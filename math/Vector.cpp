@@ -92,6 +92,14 @@ bool Vector::isZero() const {
     return std::abs(x) < EPS && std::abs(y) < EPS;
 }
 
+bool Vector::operator<(const Vector &other) const {
+    return x < other.x || y < other.y;
+}
+
+bool Vector::operator>(const Vector &other) const {
+    return x > other.x || y > other.y;
+}
+
 Vector operator*(float c, const Vector& vector) {
     return vector * c;
 }
