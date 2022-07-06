@@ -4,17 +4,15 @@
 
 #include <iostream>
 #include "Player.h"
-#include "../Engine.h"
+#include "../../Engine.h"
 #include "Bullet.h"
-#include "Particle.h"
-#include "../math/Math.h"
+#include "Exhaust.h"
+#include "../../math/Math.h"
 
-Player::Player(const GamePtr &game, Vector pos) : Entity(game),
-                                                  pos(pos),
-                                                  exaustCooldown(0.05),
-                                                  gunCooldown(0.2) {
-
-}
+Player::Player(const ContextWeakPtr &game, Vector pos) : Entity(game),
+                                                         pos(pos),
+                                                         exaustCooldown(0.025),
+                                                         gunCooldown(0.2) { }
 
 void Player::draw() {
     context()->getCanvas().drawCircle(pos, RADIUS, "FF0000");
@@ -38,7 +36,7 @@ void Player::shoot() {
     }
     if (is_mouse_button_pressed(0)) {
         context()->add<Bullet>(pos + dir * RADIUS, dir * 700);
-        gunCooldown.reset();
+        gunCooldown.wind();
     }
 }
 
@@ -72,10 +70,20 @@ void Player::exhaust() {
     if (pull.isZero() || !exaustCooldown.isOver()) {
         return;
     }
-    int color = randomInt(100, 255);
-    float radius = randomFloat(3, 10);
-    float shift = randomFloat(-10, 10);
-    Vector particlePos = pos - pull * RADIUS + pull.rotate(90_o) * shift;
-    context()->add<Particle>(particlePos, -pull * 100, radius, Color(color, color, color));
-    exaustCooldown.reset();
+    float radius = randomFloat(1, 10);
+    float shift = randomFloat(-RADIUS/2, RADIUS/2);
+    float speed = randomFloat(50,100);
+    Vector dir = -pull;
+    if (shift > 0) {
+        dir = dir.rotate(15_o);
+    } else {
+        dir = dir.rotate(-15_o);
+
+    }
+    Vector particlePos = pos - pull * (RADIUS-radius) + pull.rotate(90_o) * shift;
+    context()->add<Exhaust>(particlePos, dir * speed, radius);
+    exaustCooldown.wind();
+}
+int Player::renderLayer() const {
+    return 5;
 }

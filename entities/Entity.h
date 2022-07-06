@@ -12,16 +12,18 @@ class Entity;
 typedef std::shared_ptr<Entity> EntityPtr;
 typedef std::weak_ptr<Entity> EntityWeakPtr;
 
-#include "../core/Game.h"
+#include "../core/Context.h"
 
 class Entity {
 public:
-    Entity(const GamePtr& game): game(game) {}
+    Entity(const ContextWeakPtr& game): game(game) {}
 
     virtual void draw() = 0;
     virtual void act(float dt) = 0;
 
-    bool isTrash() {
+    [[nodiscard]] virtual int renderLayer() const = 0;
+
+    [[nodiscard]] bool isTrash() const {
         return toTrash;
     }
 
@@ -30,12 +32,12 @@ protected:
     void trash() {
         toTrash = true;
     }
-    std::shared_ptr<Game> context() {
+    ContextPtr context() {
         return game.lock();
     }
 
 private:
-    GamePtr game;
+    ContextWeakPtr game;
 
     bool toTrash = false;
 };

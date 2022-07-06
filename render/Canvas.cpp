@@ -5,6 +5,8 @@
 #include "Canvas.h"
 #include "../math/Math.h"
 
+#include <cstring>
+
 Canvas::Canvas(uint32_t *buffer, int width, int height) : buffer(buffer),
                                                           width(width),
                                                           height(height) {}
@@ -17,11 +19,13 @@ void Canvas::placePixel(int x, int y, Color c) {
     if (x < 0 || y < 0 || x >= width || y >= height) {
         return;
     }
-    *(buffer + y * width + x) = c.getBytes();
+    uint32_t *pixel = buffer + y * width + x;
+    Color currentColor(pixel);
+    *(pixel) = (currentColor + c).getBytes();
 }
 
 void Canvas::clean() {
-    memset(buffer, 0, height * width * sizeof(uint32_t));
+    clean("000000");
 }
 
 void Canvas::clean(Color c) {
@@ -39,10 +43,10 @@ void Canvas::drawRect(Point p1, Point p2, Color c) {
 }
 
 void Canvas::drawRect(Point center, int w, int h, Color c) {
-    int left = center.x-w/2;
-    int right = center.x+w/2;
-    int up =  center.y-h/2;
-    int down = center.y+h/2;
+    int left = center.x - w / 2;
+    int right = center.x + w / 2;
+    int up = center.y - h / 2;
+    int down = center.y + h / 2;
     for (int x = left; x < right; ++x) {
         for (int y = up; y < down; ++y) {
             placePixel(x, y, c);
@@ -50,17 +54,15 @@ void Canvas::drawRect(Point center, int w, int h, Color c) {
     }
 }
 void Canvas::drawCircle(Point center, int r, Color c) {
-    int left = center.x-r;
-    int right = center.x+r;
-    int up =  center.y-r;
-    int down = center.y+r;
-    for (int x = left; x < right; ++x) {
-        for (int y = up; y < down; ++y) {
-            int d = sqr(center.x-x) + sqr(center.y-y);
-            if (d <= sqr(r)) {
-                placePixel(x, y, c);
-            }
+    for (int y = -r; y < r; ++y) {
+        int len = std::sqrt(sqr(r) - sqr(y));
+        for (int x = -len; x < len; ++x) {
+            placePixel(center.x+x, center.y+y, c);
         }
     }
 }
+void Canvas::drawLine(Point p1, Point p2, Color c) {
+
+}
+
 

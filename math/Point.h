@@ -9,10 +9,17 @@
 struct Point {
     Point() = default;
 
-    Point(int x, int y): x(x), y(y) {}
+    Point(int x, int y) : x(x), y(y) {}
 
     Point(const Vector &vector) : x(static_cast<int>(vector.x)),
                                   y(static_cast<int>(vector.y)) {}
+
+    bool operator<(const Point &other) const {
+        return x < other.x && y < other.y;
+    }
+    bool operator>(const Point &other) const {
+        return x > other.x && y > other.y;
+    }
 
     int x;
     int y;

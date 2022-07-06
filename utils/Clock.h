@@ -29,7 +29,7 @@ public:
         return time;
     }
 
-    void reset() {
+    void wind() {
         time = startTime;
     }
     bool isRunning() const{

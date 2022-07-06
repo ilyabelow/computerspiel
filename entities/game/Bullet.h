@@ -5,12 +5,12 @@
 #ifndef COMPUTERSPIEL_BULLET_H
 #define COMPUTERSPIEL_BULLET_H
 
-#include "Entity.h"
+#include "../Entity.h"
 
 class Bullet : public Entity {
 public:
-    Bullet(const GamePtr& game, Vector startPos, Vector vel);
-
+    Bullet(const ContextWeakPtr& game, Vector startPos, Vector vel);
+    int renderLayer() const override;
     void draw() override;
     void act(float dt) override;
     ~Bullet() override = default;

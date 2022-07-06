@@ -93,11 +93,11 @@ bool Vector::isZero() const {
 }
 
 bool Vector::operator<(const Vector &other) const {
-    return x < other.x || y < other.y;
+    return x < other.x && y < other.y;
 }
 
 bool Vector::operator>(const Vector &other) const {
-    return x > other.x || y > other.y;
+    return x > other.x && y > other.y;
 }
 
 Vector operator*(float c, const Vector& vector) {

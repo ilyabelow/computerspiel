@@ -5,14 +5,14 @@
 #ifndef COMPUTERSPIEL_PLAYER_H
 #define COMPUTERSPIEL_PLAYER_H
 
-#include "Entity.h"
-#include "../math/Vector.h"
-#include "../utils/Clock.h"
+#include "../Entity.h"
+#include "../../math/Vector.h"
+#include "../../utils/Clock.h"
 
 class Player : public Entity {
 public:
-    Player(const GamePtr &game, Vector pos);
-
+    Player(const ContextWeakPtr &game, Vector pos);
+    int renderLayer() const override;
     void draw() override;
     void act(float dt) override;
 
@@ -31,7 +31,7 @@ private:
 
     const float THRUST = 1000;
     const float RESISTANCE = 3;
-    const int RADIUS = 20;
+    const int RADIUS = 30;
 };
 
 #endif //COMPUTERSPIEL_PLAYER_H

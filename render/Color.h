@@ -11,35 +11,58 @@ class Color {
 public:
     Color() = default;
 
-    Color(uint8_t red, uint8_t green, uint8_t blue) {
+    Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
         color[0] = blue;
         color[1] = green;
         color[2] = red;
-        color[3] = 255;
+        color[3] = alpha;
     }
 
-    Color(const char *code) noexcept: Color(fromHex(code),
-                                            fromHex(code + 2),
-                                            fromHex(code + 4)) {}
+    Color(uint8_t red, uint8_t green, uint8_t blue) : Color(red, green, blue, 255) {}
 
-    [[nodiscard]] uint8_t getRed() const {
-        return color[0];
+    Color(const uint32_t *c) {
+        *reinterpret_cast<uint32_t* >(color) = *c;
     }
 
-    [[nodiscard]] uint8_t getGreen() const {
-        return color[1];
-    }
+    Color(const char *code, int alpha) noexcept: Color(fromHex(code),
+                                                       fromHex(code + 2),
+                                                       fromHex(code + 4), alpha) {}
 
-    [[nodiscard]] uint8_t getBlue() const {
+    Color(const char *code) noexcept: Color(code, 255) {}
+
+    [[nodiscard]] uint8_t red() const {
         return color[2];
     }
 
+    [[nodiscard]] uint8_t green() const {
+        return color[1];
+    }
+
+    [[nodiscard]] uint8_t blue() const {
+        return color[0];
+    }
+
+    [[nodiscard]] uint8_t alpha() const {
+        return color[3];
+    }
+
+    Color operator+(const Color& other) const {
+        if (other.alpha() == 255) {
+            return other;
+        }
+        uint8_t newRed = (red() * (255-other.alpha()) * alpha() + other.red() * other.alpha() * 255) / 255 / 255;
+        uint8_t newGreen = (green() * (255-other.alpha()) * alpha()  + other.green() * other.alpha()*255) / 255 / 255;
+        uint8_t newBlue = (blue() * (255-other.alpha()) * alpha() + other.blue() * other.alpha()*255) / 255 / 255;
+        uint8_t newAlpha = (other.alpha()*255 + (255-other.alpha())*alpha()) / 255;
+        return {newRed, newGreen, newBlue, newAlpha};
+    }
+
     [[nodiscard]] uint32_t getBytes() const {
-        return *reinterpret_cast<const uint32_t*>(color);
+        return *reinterpret_cast<const uint32_t *>(color);
     }
 
 private:
-    uint8_t color[4]{};
+    uint8_t color[4];
 
     uint8_t fromHex(const char *c) {
         return resolveHexOneDigit(c[0]) * 16 + resolveHexOneDigit(c[1]);

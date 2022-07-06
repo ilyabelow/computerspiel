@@ -6,9 +6,11 @@
 #define COMPUTERSPIEL_CANVAS_H
 
 #include <cstdint>
-#include <cstring>
+#include <vector>
+
 #include "Color.h"
 #include "../math/Point.h"
+#include "../math/Vector.h"
 
 class Canvas {
 public:
@@ -24,15 +26,17 @@ public:
 
     void drawCircle(Point center, int r, Color c);
 
+    void drawLine(Point p1, Point p2, Color c);
+
     void clean();
 
     void clean(Color c);
 
+    const int width;
+    const int height;
 private:
     uint32_t *buffer;
 
-    int width;
-    int height;
 };
 
 #endif //COMPUTERSPIEL_CANVAS_H
