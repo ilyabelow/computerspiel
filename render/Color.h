@@ -20,6 +20,10 @@ public:
 
     Color(uint8_t red, uint8_t green, uint8_t blue) : Color(red, green, blue, 255) {}
 
+    explicit Color (uint8_t c): Color(c,c,c) {}
+
+    Color(Color c, uint8_t alpha): Color(c.red(), c.green(), c.blue(), alpha) {}
+
     Color(const uint32_t *c) {
         *reinterpret_cast<uint32_t* >(color) = *c;
     }

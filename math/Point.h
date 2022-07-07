@@ -5,21 +5,22 @@
 #ifndef COMPUTERSPIEL_POINT_H
 #define COMPUTERSPIEL_POINT_H
 
+struct Point;
+
 #include "Vector.h"
+
 struct Point {
     Point() = default;
 
-    Point(int x, int y) : x(x), y(y) {}
+    Point(int x, int y);
 
-    Point(const Vector &vector) : x(static_cast<int>(vector.x)),
-                                  y(static_cast<int>(vector.y)) {}
+    Point(const Vector &vector);
 
-    bool operator<(const Point &other) const {
-        return x < other.x && y < other.y;
-    }
-    bool operator>(const Point &other) const {
-        return x > other.x && y > other.y;
-    }
+    Vector toVector();
+
+    bool operator<(const Point &other) const;
+
+    bool operator>(const Point &other) const;
 
     int x;
     int y;

@@ -99,6 +99,9 @@ bool Vector::operator<(const Vector &other) const {
 bool Vector::operator>(const Vector &other) const {
     return x > other.x && y > other.y;
 }
+Vector::Vector(const Point &p): x(p.x), y(p.y) {
+
+}
 
 Vector operator*(float c, const Vector& vector) {
     return vector * c;

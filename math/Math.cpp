@@ -5,11 +5,11 @@
 #include "Math.h"
 
 float operator ""_o(unsigned long long int x) {
-    return static_cast<float>(x) / 180.f * F_PI;
+    return static_cast<float>(x) / 180.f * M_PIf;
 }
 
 float operator ""_o(long double x) {
-    return static_cast<float>(x) / 180.f * F_PI;
+    return static_cast<float>(x) / 180.f * M_PIf;
 }
 float random_0_1() {
     return static_cast<float>(std::rand()) / RAND_MAX;

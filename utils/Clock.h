@@ -13,6 +13,8 @@ typedef std::function<void()> Callback;
 
 class Clock {
 public:
+    Clock() : time(0), startTime(0) {}
+
     Clock( float time) : time(0), startTime(time) {}
 
     void tick(float dt) {
@@ -32,6 +34,11 @@ public:
     void wind() {
         time = startTime;
     }
+
+    void wind(float start) {
+        time = start;
+    }
+
     bool isRunning() const{
         return time > 0;
     }

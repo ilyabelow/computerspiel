@@ -16,6 +16,8 @@ public:
     void draw() override;
     void act(float dt) override;
 
+    Vector getPos() const;
+
     ~Player() override = default;
 private:
     void move(float dt);
@@ -24,14 +26,18 @@ private:
 
     Vector pos;
     Vector vel{};
+
     Vector pull{};
+    Vector face{};
 
     Clock exaustCooldown;
     Clock gunCooldown;
+    float gunSide = 10;
 
     const float THRUST = 1000;
     const float RESISTANCE = 3;
-    const int RADIUS = 30;
+    const float RADIUS = 30;
+    const float BULLET_SPEED = 500;
 };
 
 #endif //COMPUTERSPIEL_PLAYER_H

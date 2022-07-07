@@ -5,6 +5,8 @@
 #ifndef COMPUTERSPIEL_APPLICATION_H
 #define COMPUTERSPIEL_APPLICATION_H
 
+#include "../utils/Mouse.h"
+#include "../render/Canvas.h"
 #include "Context.h"
 
 class Application {
@@ -17,6 +19,7 @@ public:
 
 private:
     Canvas canvas;
+    std::shared_ptr<Mouse> mouse;
 
     void initGame ();
     void initMenu ();
@@ -30,10 +33,9 @@ private:
     ContextPtr game;
     ContextPtr menu;
     ContextPtr pause;
+    ContextPtr current;
 
     bool gamePaused{};
-
-    ContextPtr current;
 };
 
 #endif //COMPUTERSPIEL_APPLICATION_H

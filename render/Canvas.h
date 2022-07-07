@@ -11,6 +11,7 @@
 #include "Color.h"
 #include "../math/Point.h"
 #include "../math/Vector.h"
+#include "../math/Rect.h"
 
 class Canvas {
 public:
@@ -22,15 +23,23 @@ public:
 
     void drawRect(Point p1, Point p2, Color c);
 
+    void drawRect(Rect rect, Color c);
+
     void drawRect(Point center, int w, int h, Color c);
 
-    void drawCircle(Point center, int r, Color c);
+    void drawCircle(Point center, float r, Color c);
 
-    void drawLine(Point p1, Point p2, Color c);
+    void drawLine(Point p1, Point p2, Color c, float thickness);
+
+    void drawCircleLine(Point center, float r, Color c, float thickness);
+
+    void drawCircleLine(Point center, float r, float phi1, float phi2, Color c, float thickness);
 
     void clean();
 
     void clean(Color c);
+
+    [[nodiscard]] Rect rect() const;
 
     const int width;
     const int height;

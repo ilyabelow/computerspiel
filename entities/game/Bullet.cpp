@@ -10,14 +10,17 @@ Bullet::Bullet(const ContextWeakPtr &game, Vector startPos, Vector vel) :
 
 void Bullet::act(float dt) {
     pos += vel * dt;
-    if (!(pos > context()->upLeftCorner && pos < context()->downRightCorner)) {
+    if (!context()->getCanvas().rect().inside(pos)) {
         trash();
     }
 }
 
 void Bullet::draw() {
-    context()->getCanvas().drawCircle(pos, 5, "00FF00");
+    Canvas canvas = context()->getCanvas();
+    canvas.drawCircle(pos, 2, "00FF00");
+    canvas.drawLine(pos, pos-vel.normalize()*20, "00FF00", 1);
 }
+
 int Bullet::renderLayer() const {
     return 7;
 }

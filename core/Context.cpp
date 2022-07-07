@@ -6,11 +6,9 @@
 #include "Context.h"
 #include "../entities/game/Player.h"
 
-Context::Context(Canvas canvas, Vector r1, Vector r2) :
+Context::Context(Canvas canvas, MousePtr mouse) :
     canvas(canvas),
-    upLeftCorner(r1),
-    downRightCorner(r2) {}
-
+    mouse(mouse){}
 
 
 void Context::act(float dt) {
@@ -38,7 +36,7 @@ void Context::draw() {
     }
 }
 
-Canvas &Context::getCanvas() {
+Canvas Context::getCanvas() {
     return canvas;
 }
 
@@ -47,5 +45,9 @@ void Context::cleanTrash(std::vector<EntityPtr>& container, int i) {
         container[i] = std::move(container[container.size() - 1]);
         container.pop_back();
     }
+}
+
+MousePtr Context::getMouse() {
+    return mouse;
 }
 

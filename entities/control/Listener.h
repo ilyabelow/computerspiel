@@ -7,23 +7,17 @@
 
 #include <utility>
 
-#include "../Entity.h"
+#include "NotRendered.h"
 #include "../../utils/Types.h"
 
-class Listener : public Entity {
+class Listener : public NotRendered {
 public:
     Listener(const ContextWeakPtr &game, Callback &&ear) :
-        Entity(game),
+        NotRendered(game),
         ear(std::move(ear)) {}
 
-    void draw() override {
-
-    }
     void act(float dt) override {
         ear();
-    }
-    int renderLayer() const override {
-        return -1;
     }
     ~Listener() override = default;
 private:
