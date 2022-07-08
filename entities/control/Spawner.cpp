@@ -3,6 +3,8 @@
 //
 
 #include "Spawner.h"
+
+#include <utility>
 #include "../game/Enemy.h"
 
 void Spawner::act(float dt) {
@@ -16,5 +18,5 @@ void Spawner::act(float dt) {
     }
 }
 
-Spawner::Spawner(const ContextWeakPtr &game) : NotRendered(game), spawn(1) { spawn.wind(); }
+Spawner::Spawner(ContextWeakPtr game) : NotRendered(std::move(game)), spawn(1) { spawn.wind(); }
 

@@ -10,10 +10,10 @@
 
 class Button : public Entity {
 public:
-    Button(const ContextWeakPtr &game, Rect rect, Callback&& callback);
-    Button(const ContextWeakPtr &game, Point p, int w, int h, Callback&& callback);
+    Button(ContextWeakPtr game, Rect rect, Callback&& callback);
+    Button(ContextWeakPtr game, Point p, int w, int h, Callback&& callback);
 
-    void draw() override;
+    void draw() const override;
     void act(float dt) override;
     int renderLayer() const override;
     ~Button() override = default;

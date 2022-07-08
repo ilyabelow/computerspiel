@@ -9,10 +9,10 @@
 
 class Label : public Entity {
 public:
-    Label(const ContextWeakPtr &game, Point p, int w, int h);
-    Label(const ContextWeakPtr &game, Point p, int w, int h, Color c);
+    Label(ContextWeakPtr game, Point p, int w, int h);
+    Label(ContextWeakPtr game, Point p, int w, int h, Color c);
 
-    void draw() override;
+    void draw() const override;
     void act(float dt) override;
     [[nodiscard]] int renderLayer() const override;
     ~Label() override = default;

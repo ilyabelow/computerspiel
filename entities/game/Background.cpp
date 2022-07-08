@@ -5,11 +5,14 @@
 #include "Background.h"
 
 #include <utility>
+
+#include <utility>
+
 #include "../../math/Math.h"
 
-Background::Background(const ContextWeakPtr &game, std::shared_ptr<Player> player) :
-    Entity(game),
-    player(player){
+Background::Background(ContextWeakPtr game, std::shared_ptr<Player> player) :
+    Entity(std::move(game), {0, 0}),
+    player(std::move(player)){
 
     Rect screen = context()->getCanvas().rect();
 
@@ -33,7 +36,7 @@ Background::Background(const ContextWeakPtr &game, std::shared_ptr<Player> playe
     }
 }
 
-void Background::draw() {
+void Background::draw() const {
     Canvas canvas = context()->getCanvas();
     for (auto &star: backStars) {
         canvas.drawCircle(star.pos - player->getPos() / B_SHIFT,

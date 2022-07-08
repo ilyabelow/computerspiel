@@ -5,19 +5,18 @@
 #include "Button.h"
 
 #include <utility>
-#include "../../Engine.h"
 
-Button::Button(const ContextWeakPtr &game, Rect rect, Callback &&callback) :
-    Entity(game),
+Button::Button(ContextWeakPtr game, Rect rect, Callback &&callback) :
+    Entity(std::move(game), rect.p1),
     rect(rect),
     callback(std::move(callback)) {}
 
-Button::Button(const ContextWeakPtr &game, Point p, int w, int h, Callback &&callback) :
-    Entity(game),
+Button::Button(ContextWeakPtr game, Point p, int w, int h, Callback &&callback) :
+    Entity(std::move(game), p),
     rect(p, Point(p.x+w, p.y+h)),
     callback(std::move(callback)) {}
 
-void Button::draw() {
+void Button::draw() const {
     context()->getCanvas().drawRect(rect, "FF8080");
 }
 

@@ -4,22 +4,24 @@
 
 #include "Exhaust.h"
 
-Exhaust::Exhaust(const ContextWeakPtr &game, Vector pos, Vector vel, float radius) :
-    Entity(game), radius(radius), pos(pos), vel(vel){}
+#include <utility>
+
+Exhaust::Exhaust(ContextWeakPtr game, Vector pos, Vector vel, float radius) :
+    Entity(std::move(game), pos), moving(this, vel), radius(radius) {}
 
 
-void Exhaust::draw() {
+void Exhaust::draw() const {
     context()->getCanvas().drawCircle(pos,
                                       radius,
                                       Color("FFFFFF", static_cast<uint8_t>(alpha)));
 }
 
 void Exhaust::act(float dt) {
-    pos += vel * dt;
+    moving.move(dt);
     radius += 20 * dt;
     alpha -= 500 * dt;
     if (alpha <= 0.1) {
-        trash();
+        die();
     }
 }
 int Exhaust::renderLayer() const {

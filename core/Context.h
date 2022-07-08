@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <array>
+#include <unordered_map>
 
 class Context;
 
@@ -20,6 +21,12 @@ typedef std::shared_ptr<Context> ContextPtr;
 #include "../entities/Entity.h"
 #include "../math/Rect.h"
 #include "../utils/Mouse.h"
+
+
+class Group: public std::vector<EntityPtr> {
+public:
+    void takeOutTrash();
+};
 
 class Context: public std::enable_shared_from_this<Context> {
 public:
@@ -31,27 +38,32 @@ public:
     template <typename T, typename... Args>
     std::shared_ptr<T> add(Args&&... args) {
         std::shared_ptr<T> entity = std::make_shared<T>(weak_from_this(), std::forward<Args>(args)...);
-        newEntities.push_back(entity);
+        actGroup.push_back(entity);
         if (entity->renderLayer() >= 0) {
-            layers[entity->renderLayer()].push_back(entity);
+            renderGroups[entity->renderLayer()].push_back(entity);
+        }
+        for (auto & name: entity->groupsNames()){
+            if (!groups.contains(name)) {
+                groups[name] = {};
+            }
+            groups[name].push_back(entity);
         }
         return entity;
     }
 
     Canvas getCanvas();
     MousePtr getMouse();
-private:
-    void cleanTrash(std::vector<EntityPtr>& container, int i);
+    Group& getGroup(const std::string& name);
 
+private:
     Canvas canvas;
     MousePtr mouse;
 
     static const size_t LAYERS = 8;
-    std::array<std::vector<EntityPtr>, LAYERS> layers;
 
-    std::vector<EntityPtr> entities{};
-    std::vector<EntityPtr> newEntities{};
-
+    Group actGroup{};
+    std::array<Group, LAYERS> renderGroups;
+    std::unordered_map<std::string, Group> groups;
 
 };
 

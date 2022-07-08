@@ -12,8 +12,8 @@
 
 class Listener : public NotRendered {
 public:
-    Listener(const ContextWeakPtr &game, Callback &&ear) :
-        NotRendered(game),
+    Listener(ContextWeakPtr game, Callback ear) :
+        NotRendered(std::move(game)),
         ear(std::move(ear)) {}
 
     void act(float dt) override {

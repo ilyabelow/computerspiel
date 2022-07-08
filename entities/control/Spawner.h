@@ -10,7 +10,7 @@
 
 class Spawner : public NotRendered {
 public:
-    Spawner(const ContextWeakPtr &game);
+    Spawner(ContextWeakPtr game);
 
     void act(float dt) override;
 

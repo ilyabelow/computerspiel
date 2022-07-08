@@ -89,8 +89,8 @@ void Canvas::drawLine(Point p1, Point p2, Color c, float thickness) {
                 whole -= 1;
             }
             int remainder255 = static_cast<int>((y - static_cast<float>(whole)) * 255);
-            placePixel(whole, x, Color(c, (255 - remainder255) * c.alpha() / 255));
-            placePixel(whole + 1, x, Color(c, remainder255 * c.alpha() / 255));
+            placePixel(whole, x, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+            placePixel(whole + 1, x,c.withBrightness(remainder255 * c.alpha() / 255));
             y += slope;
         }
     } else {
@@ -101,8 +101,8 @@ void Canvas::drawLine(Point p1, Point p2, Color c, float thickness) {
             }
             int remainder255 = static_cast<int>((y - static_cast<float>(whole)) * 255);
 
-            placePixel(x, whole, Color(c, (255 - remainder255)* c.alpha() / 255));
-            placePixel(x, whole + 1, Color(c, remainder255* c.alpha() / 255));
+            placePixel(x, whole, c.withBrightness( (255 - remainder255)* c.alpha() / 255));
+            placePixel(x, whole + 1, c.withBrightness(remainder255* c.alpha() / 255));
             y += slope;
         }
     }
@@ -118,32 +118,32 @@ void Canvas::drawCircleLine(Point center, float r, Color c, float thickness) {
         int whole = static_cast<int>(y);
         int remainder255 = static_cast<int>((y - static_cast<float>(whole)) * 255);
 
-        placePixel(x, whole, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(x, whole + 1, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(x, whole, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(x, whole + 1, c.withBrightness( remainder255 * c.alpha() / 255));
     }
     for (int x = x1; x <= x2; x++) {
         float y = center.y - std::sqrt(sqr(r) - sqr(x-center.x));
         int whole = static_cast<int>(y);
         int remainder255 = static_cast<int>((y - static_cast<float>(whole)) * 255);
 
-        placePixel(x, whole, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(x, whole + 1, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(x, whole, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(x, whole + 1, c.withBrightness( remainder255 * c.alpha() / 255));
     }
     for (int y = y1; y <= y2; y++) {
         float x = center.x + std::sqrt(sqr(r) - sqr(y-center.y));
         int whole = static_cast<int>(x);
         int remainder255 = static_cast<int>((x - static_cast<float>(whole)) * 255);
 
-        placePixel(whole,y, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(whole + 1,y, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(whole,y, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(whole + 1,y, c.withBrightness( remainder255 * c.alpha() / 255));
     }
     for (int y = y1; y <= y2; y++) {
         float x = center.x - std::sqrt(sqr(r) - sqr(y-center.y));
         int whole = static_cast<int>(x);
         int remainder255 = static_cast<int>((x - static_cast<float>(whole)) * 255);
 
-        placePixel(whole,y, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(whole + 1,y, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(whole,y, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(whole + 1,y, c.withBrightness( remainder255 * c.alpha() / 255));
     }
 }
 
@@ -168,8 +168,8 @@ void Canvas::drawCircleLine(Point center, float r, float phi1, float phi2, Color
         int whole = static_cast<int>(y);
         int remainder255 = static_cast<int>((y - static_cast<float>(whole)) * 255);
 
-        placePixel(x, whole, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(x, whole + 1, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(x, whole, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(x, whole + 1, c.withBrightness( remainder255 * c.alpha() / 255));
     }
     for (int x = x1; x <= x2; x++) {
         if (phi1 > M_PI_4f && x > xp1 || phi2 < 3*M_PI_4f && x < xp2) {
@@ -179,16 +179,16 @@ void Canvas::drawCircleLine(Point center, float r, float phi1, float phi2, Color
         int whole = static_cast<int>(y);
         int remainder255 = static_cast<int>((y - static_cast<float>(whole)) * 255);
 
-        placePixel(x, whole, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(x, whole + 1, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(x, whole, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(x, whole + 1, c.withBrightness( remainder255 * c.alpha() / 255));
     }
     for (int y = y1; y <= y2; y++) {
         float x = center.x + std::sqrt(sqr(r) - sqr(y-center.y));
         int whole = static_cast<int>(x);
         int remainder255 = static_cast<int>((x - static_cast<float>(whole)) * 255);
 
-        placePixel(whole,y, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(whole + 1,y, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(whole,y, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(whole + 1,y, c.withBrightness( remainder255 * c.alpha() / 255));
     }
     for (int y = y1; y <= y2; y++) {
         if (phi1 > 3*M_PI_4f && y < yp1 || phi2 < 5*M_PI_4f && y > yp2) {
@@ -198,8 +198,8 @@ void Canvas::drawCircleLine(Point center, float r, float phi1, float phi2, Color
         int whole = static_cast<int>(x);
         int remainder255 = static_cast<int>((x - static_cast<float>(whole)) * 255);
 
-        placePixel(whole,y, Color(c, (255 - remainder255) * c.alpha() / 255));
-        placePixel(whole + 1,y, Color(c, remainder255 * c.alpha() / 255));
+        placePixel(whole,y, c.withBrightness((255 - remainder255) * c.alpha() / 255));
+        placePixel(whole + 1,y, c.withBrightness( remainder255 * c.alpha() / 255));
     }
 }
 

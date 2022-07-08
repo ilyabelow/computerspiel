@@ -6,21 +6,21 @@
 #define COMPUTERSPIEL_EXHAUST_H
 
 #include "../Entity.h"
+#include "../../components/Moving.h"
 
 class Exhaust: public Entity {
 public:
-    Exhaust(const ContextWeakPtr& game, Vector pos, Vector vel, float radius);
+    Exhaust(ContextWeakPtr game, Vector pos, Vector vel, float radius);
 
-    void draw() override;
+    void draw() const override;
     void act(float dt) override;
     ~Exhaust() override = default;
     int renderLayer() const override;
 private:
+    Moving moving;
+
     float radius;
     float alpha = 255;
-
-    Vector pos;
-    Vector vel;
 };
 
 #endif //COMPUTERSPIEL_EXHAUST_H

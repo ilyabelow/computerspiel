@@ -22,9 +22,9 @@ struct Star {
 
 class Background: public Entity {
 public:
-    Background(const ContextWeakPtr& game, std::shared_ptr<Player> player);
+    Background(ContextWeakPtr game, std::shared_ptr<Player> player);
 
-    void draw() override;
+    void draw() const override;
     void act(float dt) override;
     int renderLayer() const override;
     ~Background() override = default;

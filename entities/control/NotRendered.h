@@ -5,12 +5,14 @@
 #ifndef COMPUTERSPIEL_NOTRENDERED_H
 #define COMPUTERSPIEL_NOTRENDERED_H
 
+#include <utility>
+
 #include "../Entity.h"
 
 class NotRendered: public Entity {
 public:
-    explicit NotRendered(const ContextWeakPtr &game): Entity(game) {}
-    void draw() final{
+    explicit NotRendered(ContextWeakPtr game): Entity(std::move(game), {0, 0}) {}
+    void draw() const final {
 
     }
     [[nodiscard]] int renderLayer() const final {

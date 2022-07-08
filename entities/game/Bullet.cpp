@@ -3,22 +3,31 @@
 //
 
 #include "Bullet.h"
-Bullet::Bullet(const ContextWeakPtr &game, Vector startPos, Vector vel) :
-    Entity(game),
-    pos(startPos),
-    vel(vel) {}
+
+#include <utility>
+#include "Enemy.h"
+
+Bullet::Bullet(ContextWeakPtr game, Vector startPos, Vector vel) :
+    Entity(std::move(game), startPos), moving(this, vel) {}
 
 void Bullet::act(float dt) {
-    pos += vel * dt;
+    moving.move(dt);
     if (!context()->getCanvas().rect().inside(pos)) {
-        trash();
+        die();
+    }
+    auto & enemies = context()->getGroup("enemy");
+    for (auto & enemy: enemies) {
+        if (std::dynamic_pointer_cast<Enemy>(enemy)->inside(pos)) {
+            enemy->die();
+            die();
+        }
     }
 }
 
-void Bullet::draw() {
+void Bullet::draw() const {
     Canvas canvas = context()->getCanvas();
     canvas.drawCircle(pos, 2, "00FF00");
-    canvas.drawLine(pos, pos-vel.normalize()*20, "00FF00", 1);
+    canvas.drawLine(pos, pos-moving.vel.normalize()*20, "00FF00", 1);
 }
 
 int Bullet::renderLayer() const {

@@ -8,24 +8,27 @@
 #include "../Entity.h"
 #include "../../math/Vector.h"
 #include "../../utils/Clock.h"
+#include "../../components/Moving.h"
+#include "../../components/Health.h"
 
 class Player : public Entity {
 public:
-    Player(const ContextWeakPtr &game, Vector pos);
+    Player(ContextWeakPtr game, Vector pos);
     int renderLayer() const override;
-    void draw() override;
+    void draw() const override;
     void act(float dt) override;
 
     Vector getPos() const;
 
     ~Player() override = default;
 private:
-    void move(float dt);
+    Vector calcAcc();
+    void constrain();
     void shoot();
     void exhaust();
 
-    Vector pos;
-    Vector vel{};
+    Moving moving;
+    Health health;
 
     Vector pull{};
     Vector face{};

@@ -22,8 +22,6 @@ public:
 
     explicit Color (uint8_t c): Color(c,c,c) {}
 
-    Color(Color c, uint8_t alpha): Color(c.red(), c.green(), c.blue(), alpha) {}
-
     Color(const uint32_t *c) {
         *reinterpret_cast<uint32_t* >(color) = *c;
     }
@@ -48,6 +46,10 @@ public:
 
     [[nodiscard]] uint8_t alpha() const {
         return color[3];
+    }
+
+    Color withBrightness(uint8_t a) const {
+        return Color(red(), green(), blue(), a);
     }
 
     Color operator+(const Color& other) const {

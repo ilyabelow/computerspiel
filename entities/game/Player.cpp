@@ -3,31 +3,35 @@
 //
 
 #include <iostream>
+#include <utility>
 #include "Player.h"
 #include "../../Engine.h"
 #include "Bullet.h"
 #include "Exhaust.h"
 #include "../../math/Math.h"
 
-Player::Player(const ContextWeakPtr &game, Vector pos) : Entity(game),
-                                                         pos(pos),
+Player::Player(ContextWeakPtr game, Vector pos) : Entity(std::move(game), pos),
+                                                         moving(this),
+                                                         health(this, 100),
                                                          exaustCooldown(0.025),
                                                          gunCooldown(0.2) {}
 
-void Player::draw() {
+void Player::draw() const {
     Canvas canvas = context()->getCanvas();
     float angle = pull.angle() + M_PIf;
     canvas.drawCircleLine(pos, RADIUS, "FF0000", 1);
     Vector offset = std::abs(gunSide) * face.rotate(90_o);
-    canvas.drawLine(pos+face*RADIUS+offset, pos+face*(RADIUS+10)+offset, "FF0000", 1);
-    canvas.drawLine(pos+face*RADIUS-offset, pos+face*(RADIUS+10)-offset, "FF0000", 1);
+    canvas.drawLine(pos + face * RADIUS + offset, pos + face * (RADIUS + 10) + offset, "FF0000", 1);
+    canvas.drawLine(pos + face * RADIUS - offset, pos + face * (RADIUS + 10) - offset, "FF0000", 1);
 
 }
 
 void Player::act(float dt) {
-    move(dt);
+    moving.move(dt, calcAcc());
+    constrain();
     shoot();
     exhaust();
+
     exaustCooldown.tick(dt);
     gunCooldown.tick(dt);
 }
@@ -39,54 +43,33 @@ void Player::shoot() {
         return;
     }
     if (mouse->isPressed(0)) {
-        Vector bulletPos = pos + face * (RADIUS +20)+ gunSide * face.rotate(90_o);
+        Vector bulletPos = pos + face * (RADIUS + 20) + gunSide * face.rotate(90_o);
         gunSide = -gunSide;
         context()->add<Bullet>(bulletPos, face * BULLET_SPEED);
         gunCooldown.wind();
     }
 }
 
-void Player::move(float dt) {
-    pull = {};
-    if (is_key_pressed(VK_DOWN)) {
-        pull += {0, 1};
+void Player::constrain() {
+    if (moving.vel.norm2() < 1) {
+        moving.vel = Vector();
     }
-    if (is_key_pressed(VK_UP)) {
-        pull += {0, -1};
-    }
-    if (is_key_pressed(VK_RIGHT)) {
-        pull += {1, 0};
-    }
-    if (is_key_pressed(VK_LEFT)) {
-        pull += {-1, 0};
-    }
-    Vector acc{};
-    if (!pull.isZero()) {
-        acc += THRUST * pull.normalize();
-    }
-    acc -= RESISTANCE * vel;
-    vel += acc * dt;
-    if (vel.norm2() < 1) {
-        vel = Vector();
-    }
-    pos += dt * vel;
-
     if (pos.x - RADIUS < 0) {
         pos.x = RADIUS;
-        vel.x = 0;
+        moving.vel.x = 0;
     }
     if (pos.y - RADIUS < 0) {
         pos.y = RADIUS;
-        vel.y = 0;
+        moving.vel.y = 0;
     }
     Point border = context()->getCanvas().rect().p2;
     if (pos.x + RADIUS > border.x) {
         pos.x = border.x - RADIUS;
-        vel.x = 0;
+        moving.vel.x = 0;
     }
     if (pos.y + RADIUS > border.y) {
         pos.y = border.y - RADIUS;
-        vel.y = 0;
+        moving.vel.y = 0;
     }
 }
 
@@ -114,3 +97,25 @@ int Player::renderLayer() const {
 Vector Player::getPos() const {
     return pos;
 }
+Vector Player::calcAcc() {
+    pull = {};
+    if (is_key_pressed(VK_DOWN)) {
+        pull += {0, 1};
+    }
+    if (is_key_pressed(VK_UP)) {
+        pull += {0, -1};
+    }
+    if (is_key_pressed(VK_RIGHT)) {
+        pull += {1, 0};
+    }
+    if (is_key_pressed(VK_LEFT)) {
+        pull += {-1, 0};
+    }
+    Vector acc{};
+    if (!pull.isZero()) {
+        acc += THRUST * pull.normalize();
+    }
+    acc -= RESISTANCE * moving.vel;
+    return acc;
+}
+

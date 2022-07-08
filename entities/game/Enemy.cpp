@@ -4,14 +4,16 @@
 
 #include "Enemy.h"
 
-void Enemy::draw() {
+#include <utility>
+
+void Enemy::draw() const {
     context()->getCanvas().drawRect(pos, 30, 30, "FF00FF");
 }
 
 void Enemy::act(float dt) {
-    pos += vel * dt;
+    moving.move(dt);
     if (!context()->getCanvas().rect().inside(pos)) {
-        trash();
+        die();
     }
 }
 
@@ -19,6 +21,14 @@ int Enemy::renderLayer() const {
     return 3;
 }
 
-Enemy::Enemy(const ContextWeakPtr& game, Vector pos, Vector vel): Entity(game), pos(pos), vel(vel) {
+std::vector<std::string> Enemy::groupsNames() const {
+    return {"enemy"};
+}
 
+Enemy::Enemy(ContextWeakPtr game, Vector pos, Vector vel) :
+    Entity(std::move(game), pos),
+    moving(this, vel),
+    health(this, 100) {}
+bool Enemy::inside(const Vector &r) const {
+    return (pos - r).norm2() < 1000;
 }
