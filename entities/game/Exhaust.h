@@ -8,7 +8,7 @@
 #include "../Entity.h"
 #include "../../components/Moving.h"
 
-class Exhaust: public Entity {
+class Exhaust: public Entity, public Moving {
 public:
     Exhaust(ContextWeakPtr game, Vector pos, Vector vel, float radius);
 
@@ -17,8 +17,6 @@ public:
     ~Exhaust() override = default;
     int renderLayer() const override;
 private:
-    Moving moving;
-
     float radius;
     float alpha = 255;
 };

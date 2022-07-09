@@ -5,16 +5,19 @@
 #include "Moving.h"
 
 void Moving::move(float dt) {
-    entity->pos += vel * dt;
+    pos += vel * dt;
 }
 
 void Moving::move(float dt, Vector acc) {
     vel += acc * dt;
-    entity->pos += dt * vel;
+    pos += dt * vel;
 }
-Moving::Moving(Entity* entity): entity(entity), vel() {
+Moving::Moving(Vector pos): pos(pos), vel() {
 
 }
-Moving::Moving(Entity* entity, Vector vel): entity(entity), vel(vel) {
+Moving::Moving(Vector pos, Vector vel): pos(pos), vel(vel) {
 
+}
+Vector Moving::getPos() {
+    return pos;
 }

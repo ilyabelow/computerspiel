@@ -11,7 +11,7 @@ Point Mouse::cursor() const {
 }
 
 bool Mouse::isPressed(int button) const {
-    return is_mouse_button_pressed(button) && !freezed[button];
+    return is_mouse_button_pressed(button);
 }
 
 bool Mouse::isReleased(int button) const {
@@ -24,12 +24,6 @@ bool Mouse::isClicked(int button) const {
 
 void Mouse::update() {
     for (int i = 0; i < 3; ++i) {
-        if (freezed[i] && isReleased(i)) {
-            freezed[i] = false;
-        }
         prev[i] = is_mouse_button_pressed(i);
     }
-}
-void Mouse::freeze(int button) {
-    freezed[button] = true;
 }

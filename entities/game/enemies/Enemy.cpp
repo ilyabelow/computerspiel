@@ -3,15 +3,23 @@
 //
 
 #include "Enemy.h"
+#include "../../../math/Math.h"
 
 #include <utility>
+using namespace std::placeholders;
+
+Enemy::Enemy(ContextWeakPtr game, Vector pos, Vector vel) :
+    Entity(std::move(game)),
+    Moving(pos, vel),
+    Health(100) {}
 
 void Enemy::draw() const {
-    context()->getCanvas().drawRect(pos, 30, 30, "FF00FF");
+    context()->getCanvas().drawRotatedRectLine(pos, 30, 30, alpha, "FF00FF");
 }
 
 void Enemy::act(float dt) {
-    moving.move(dt);
+    alpha += 1/M_2_PIf*dt;
+    move(dt);
     if (!context()->getCanvas().rect().inside(pos)) {
         die();
     }
@@ -25,10 +33,13 @@ std::vector<std::string> Enemy::groupsNames() const {
     return {"enemy"};
 }
 
-Enemy::Enemy(ContextWeakPtr game, Vector pos, Vector vel) :
-    Entity(std::move(game), pos),
-    moving(this, vel),
-    health(this, 100) {}
+
+
 bool Enemy::inside(const Vector &r) const {
     return (pos - r).norm2() < 1000;
+}
+void Enemy::onHealthChanged(int health, int delta) {
+    if (health == 0) {
+        die();
+    }
 }

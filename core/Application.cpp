@@ -13,10 +13,11 @@
 
 #include "../Engine.h"
 #include "../entities/game/Background.h"
-#include "../entities/game/Enemy.h"
+#include "../entities/game/enemies/Enemy.h"
 #include "../entities/control/Spawner.h"
+#include "../entities/ui/Title.h"
 
-Application::Application(const Canvas& screen) :
+Application::Application(const Canvas &screen) :
     canvas(screen),
     mouse(std::make_shared<Mouse>()) {
     initMenu();
@@ -64,8 +65,7 @@ void Application::unpauseGame() {
 void Application::initGame() {
     game = std::make_shared<Context>(canvas, mouse);
 
-    auto player = game->add<Player>(Vector(canvas.width/2, 500));
-    game->add<Enemy>(Vector(300, 300), Vector(0, 0));
+    auto player = game->add<Player>(Vector(canvas.width / 2, 500));
 
     game->add<Listener>([this]() {
         if (is_key_pressed(VK_ESCAPE)) {
@@ -83,25 +83,48 @@ void Application::initMenu() {
     menu = std::make_shared<Context>(canvas, mouse);
 
     int w_center = w / 2;
-    int button_width = 300;
-    int button_height = 75;
-    int logo_width = 700;
-    int logo_height = 500;
-    int vert_dist = (h - button_height * 2 - logo_height) / 4;
-    assert(vert_dist > 0);
-    menu->add<Button>(Point(w_center - button_width / 2, logo_height + vert_dist * 2),
-                      button_width,
-                      button_height,
+    int button_width = 320;
+    int text_size = button_width / 8;
+    int text_margin = 10;
+    int button_height = text_size + 2 * text_margin;
+
+    int top_margin = 50;
+    int between_buttons = 30;
+    int title_width = Title::WIDTH();
+    int title_height = Title::HEIGHT();
+    int buttons_margin = (h - top_margin - title_height - button_height * 2 - between_buttons) / 2;
+
+    menu->add<Title>(Point(w_center - title_width / 2, top_margin));
+
+    menu->add<Button>(Rect({w_center - button_width / 2,
+                            h - button_height * 2 - buttons_margin - between_buttons},
+                           button_width,
+                           button_height
+                      ),
+                      Point(w_center - button_width / 2,
+                            top_margin +
+                                title_height +
+                                buttons_margin +
+                                text_margin
+                      ),
+                      Text("- PLAY -", text_size, WHITE),
                       [this]() { startGame(); }
     );
-    menu->add<Button>(Point(w_center - button_width / 2, logo_height + vert_dist * 3 + button_height),
-                      button_width,
-                      button_height,
+    menu->add<Button>(Rect({w_center - button_width / 2,
+                            h - button_height - buttons_margin},
+                           button_width,
+                           button_height
+                      ),
+                      Point(w_center - button_width / 2,
+                            top_margin +
+                                title_height +
+                                buttons_margin +
+                                button_height +
+                                between_buttons +
+                                text_margin
+                      ),
+                      Text("- QUIT -", text_size, WHITE),
                       []() { schedule_quit_game(); }
-    );
-    menu->add<Label>(Point(w_center - logo_width / 2, vert_dist),
-                     logo_width,
-                     logo_height
     );
 }
 
@@ -112,42 +135,51 @@ void Application::initPause() {
 
     int w_center = w / 2;
 
-    int label_width = 500;
-    int label_height = 200;
+    int plate_width = 500;
+    int plate_height = 200;
 
-    int title_width = 300;
-    int title_height = 75;
 
-    int button_width = 150;
-    int button_height = 50;
+    int text_size = 25;
+    int button_1_width = 8*text_size;
+    int button_2_width = 9*text_size;
 
-    int hor_margins = (label_width - button_width * 2) / 3;
-    int ver_margins = (label_height - title_height - button_height) / 3;
-    int above_padding = (h - label_height) / 2;
+    int prompt_height = 30;
 
-    pause->add<Button>(Point(w_center - button_width - hor_margins / 2, title_height + above_padding + ver_margins * 2),
-                       button_width,
-                       button_height,
-                       [this]() { unpauseGame(); }
+    int button_width_total = button_1_width+button_2_width;
+
+    int text_margin = 10;
+    int button_height = text_size + 2 * text_margin;
+
+
+    int hor_margins = (plate_width - button_width_total) / 3;
+    int ver_margins = (plate_height - prompt_height - button_height) / 3;
+    int above_padding = (h - plate_height) / 2;
+    // Main plate
+    pause->add<Plate>(Rect({w_center - plate_width / 2, above_padding},
+                           plate_width,
+                           plate_height),
+                      "8080FF");
+    // Continue button
+    pause->add<Button>(
+        Rect({w_center - plate_width/2+hor_margins, prompt_height + above_padding + ver_margins * 2},
+             button_1_width,
+             button_height),
+        Point(w_center - plate_width/2+hor_margins, prompt_height + above_padding + ver_margins * 2 + text_margin),
+        Text("CONTINUE", text_size, WHITE),
+        [this]() { unpauseGame(); }
     );
-    pause->add<Button>(Point(w_center + hor_margins / 2, title_height + above_padding + ver_margins * 2),
-                       button_width,
-                       button_height,
-                       [this]() { quitGame(); }
+    // Quit button
+    pause->add<Button>(
+
+        Rect({w_center + plate_width/2-hor_margins-button_2_width, prompt_height + above_padding + ver_margins * 2},
+             button_2_width,
+             button_height),
+        Point(w_center + plate_width/2-hor_margins-button_2_width, prompt_height + above_padding + ver_margins * 2+ text_margin),
+        Text("STOP GAME", text_size, WHITE),
+        [this]() { quitGame(); }
     );
-    pause->add<Label>(Point(0, 0),
-                      w,
-                      h,
-                      Color("FFFFFF", 50)
-    );
-    pause->add<Label>(Point(w_center - label_width / 2, above_padding),
-                      label_width,
-                      label_height,
-                      "8080FF"
-    );
-    pause->add<Label>(Point(w_center - title_width / 2, above_padding + ver_margins),
-                      title_width,
-                      title_height,
-                      "80FF80"
-    );
+    // Prompt
+    pause->add<Label> (Point(w_center-13*prompt_height/2, above_padding+ver_margins),
+                       Text("ARE YOU SURE?", prompt_height, WHITE));
+
 }

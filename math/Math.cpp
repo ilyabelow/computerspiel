@@ -20,3 +20,10 @@ int randomInt(int from, int to) {
 float randomFloat(float from, float to) {
     return from + random_0_1() * (to - from);
 }
+float atan2bound(float y, float x) {
+    float phi = std::atan2(y, x);
+    if (phi < 0) {
+        phi += M_TAUf;
+    }
+    return phi;
+}

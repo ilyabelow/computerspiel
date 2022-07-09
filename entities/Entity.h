@@ -14,11 +14,10 @@ typedef std::shared_ptr<Entity> EntityPtr;
 typedef std::weak_ptr<Entity> EntityWeakPtr;
 
 #include "../core/Context.h"
-#include "../math/Vector.h"
 
-class Entity: public std::enable_shared_from_this<Entity> {
+class Entity {
 public:
-    Entity(ContextWeakPtr game, Vector pos): game(std::move(game)), pos(pos) {}
+    explicit Entity(ContextWeakPtr game): game(std::move(game)) {}
 
     virtual void draw() const = 0;
     virtual void act(float dt) = 0;
@@ -34,8 +33,6 @@ public:
     void die() {
         zombie = true;
     }
-
-    Vector pos;
 
     virtual ~Entity() = default;
 protected:

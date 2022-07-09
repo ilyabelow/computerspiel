@@ -9,17 +9,22 @@
 
 class Label : public Entity {
 public:
-    Label(ContextWeakPtr game, Point p, int w, int h);
-    Label(ContextWeakPtr game, Point p, int w, int h, Color c);
+    Label(ContextWeakPtr game, Point p, Text text): Entity(std::move(game)), p(p), text(std::move(text)) {}
 
-    void draw() const override;
-    void act(float dt) override;
-    [[nodiscard]] int renderLayer() const override;
+    void draw() const override {
+        context()->getCanvas().drawText(p, text);
+    }
+
+    void act(float dt) override {
+
+    }
+    [[nodiscard]] int renderLayer() const override {
+        return 6;
+    }
     ~Label() override = default;
 private:
-    Point p1;
-    Point p2;
-    Color color;
+    Point p;
+    Text text;
 };
 
 #endif //COMPUTERSPIEL_LABEL_H

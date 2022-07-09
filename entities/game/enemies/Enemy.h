@@ -5,12 +5,12 @@
 #ifndef COMPUTERSPIEL_ENEMY_H
 #define COMPUTERSPIEL_ENEMY_H
 
-#include "../Entity.h"
-#include "../../math/Vector.h"
-#include "../../components/Moving.h"
-#include "../../components/Health.h"
+#include "../../Entity.h"
+#include "../../../math/Vector.h"
+#include "../../../components/Moving.h"
+#include "../../../components/Health.h"
 
-class Enemy: public Entity {
+class Enemy: public Entity, public Moving, public Health {
 public:
     Enemy(ContextWeakPtr game, Vector pos, Vector vel);
     [[nodiscard]] std::vector<std::string> groupsNames() const override;
@@ -21,9 +21,11 @@ public:
     ~Enemy() override = default;
 
     bool inside(const Vector& r) const;
+
 private:
-    Moving moving;
-    Health health;
+    float alpha;
+
+    void onHealthChanged(int health, int delta) override;
 };
 
 #endif //COMPUTERSPIEL_ENEMY_H

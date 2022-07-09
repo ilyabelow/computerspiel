@@ -5,24 +5,26 @@
 #ifndef COMPUTERSPIEL_HEALTH_H
 #define COMPUTERSPIEL_HEALTH_H
 
+#include <functional>
 #include "../entities/Entity.h"
 
 class Health {
 public:
-    Health(Entity* entity, int maxHealth);
-    Health(Entity* entity, int health, int maxHealth);
-
-    [[nodiscard]] int healthLeft() const;
-
     void hit(int dmg);
 
     void heal(int up);
+protected:
+
+    Health(int maxHealth);
+
+    [[nodiscard]] int healthLeft() const;
 
 private:
-    Entity* entity;
-
     int maxHealth;
-    int health;
+    int currentHealth;
+
+    virtual void onHealthChanged(int health, int delta) = 0;
+
 };
 
 #endif //COMPUTERSPIEL_HEALTH_H

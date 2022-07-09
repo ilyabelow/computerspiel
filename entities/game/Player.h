@@ -11,14 +11,12 @@
 #include "../../components/Moving.h"
 #include "../../components/Health.h"
 
-class Player : public Entity {
+class Player : public Entity, public Health, public Moving {
 public:
     Player(ContextWeakPtr game, Vector pos);
     int renderLayer() const override;
     void draw() const override;
     void act(float dt) override;
-
-    Vector getPos() const;
 
     ~Player() override = default;
 private:
@@ -27,15 +25,12 @@ private:
     void shoot();
     void exhaust();
 
-    Moving moving;
-    Health health;
-
+    void onHealthChanged(int health, int delta) override;
     Vector pull{};
     Vector face{};
 
     Clock exaustCooldown;
     Clock gunCooldown;
-    float gunSide = 10;
 
     const float THRUST = 1000;
     const float RESISTANCE = 3;

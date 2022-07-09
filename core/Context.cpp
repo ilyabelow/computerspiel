@@ -2,33 +2,32 @@
 // Created by ilyabelow on 04/07/2022.
 //
 
-#include <iostream>
 #include "Context.h"
-#include "../entities/game/Player.h"
+
+#include <utility>
 
 Context::Context(Canvas canvas, MousePtr mouse) :
     canvas(canvas),
-    mouse(mouse) {}
+    mouse(std::move(mouse)) {}
 
 void Context::act(float dt) {
     for (int i = 0; i < actGroup.size(); ++i) {
         actGroup[i]->act(dt);
     }
     actGroup.takeOutTrash();
-    for (auto & layer: renderGroups) {
+    for (auto &layer: renderGroups) {
         layer.takeOutTrash();
     }
-    for (auto & group: groups) {
+    for (auto &group: groups) {
         group.second.takeOutTrash();
     }
-    std::cout << actGroup.size() << std::endl;
 }
 
 void Context::draw() {
     for (int l = 0; l < LAYERS; l++) {
         auto &layer = renderGroups[l];
         for (int i = 0; i < layer.size(); ++i) {
-            layer.at(i)->draw();
+            layer[i]->draw();
         }
     }
 }
@@ -43,6 +42,19 @@ MousePtr Context::getMouse() {
 
 Group &Context::getGroup(const std::string &name) {
     return groups[name];
+}
+
+void Context::add(const EntityPtr &entity) {
+    actGroup.push_back(entity);
+    if (entity->renderLayer() >= 0) {
+        renderGroups[entity->renderLayer()].push_back(entity);
+    }
+    for (auto &name: entity->groupsNames()) {
+        if (!groups.contains(name)) {
+            groups[name] = {};
+        }
+        groups[name].push_back(entity);
+    }
 }
 
 void Group::takeOutTrash() {

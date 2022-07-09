@@ -18,11 +18,9 @@ public:
     [[nodiscard]] bool isReleased(int button) const;
     [[nodiscard]] Point cursor() const;
 
-    void freeze(int button);
     void update();
 private:
     std::array<bool, 3> prev;
-    std::array<bool, 3> freezed;
 };
 
 typedef std::shared_ptr<Mouse> MousePtr;

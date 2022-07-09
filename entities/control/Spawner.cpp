@@ -5,13 +5,15 @@
 #include "Spawner.h"
 
 #include <utility>
-#include "../game/Enemy.h"
+#include "../game/enemies/Enemy.h"
+#include "../game/enemies/Egg.h"
 
 void Spawner::act(float dt) {
     spawn.tick(dt);
     if (spawn.isOver()) {
         if (iter < 10) {
-            context()->add<Enemy>(Vector(100+90*iter,100), Vector(0,100));
+            auto enemy = context()->create<Enemy>(Vector(100+90*iter,100), Vector(0,100));
+            context()->add<Egg>(enemy);
             spawn.wind();
         }
         iter++;

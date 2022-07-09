@@ -5,20 +5,21 @@
 #include "Bullet.h"
 
 #include <utility>
-#include "Enemy.h"
+#include "enemies/Enemy.h"
 
-Bullet::Bullet(ContextWeakPtr game, Vector startPos, Vector vel) :
-    Entity(std::move(game), startPos), moving(this, vel) {}
+Bullet::Bullet(ContextWeakPtr game, Vector pos, Vector vel) :
+    Entity(std::move(game)), Moving(pos, vel) {}
 
 void Bullet::act(float dt) {
-    moving.move(dt);
+    move(dt);
     if (!context()->getCanvas().rect().inside(pos)) {
         die();
     }
     auto & enemies = context()->getGroup("enemy");
-    for (auto & enemy: enemies) {
-        if (std::dynamic_pointer_cast<Enemy>(enemy)->inside(pos)) {
-            enemy->die();
+    for (auto & enemyEntity: enemies) {
+        auto enemy = std::dynamic_pointer_cast<Enemy>(enemyEntity);
+        if (enemy->inside(pos)) {
+            enemy->hit(50);
             die();
         }
     }
@@ -26,8 +27,8 @@ void Bullet::act(float dt) {
 
 void Bullet::draw() const {
     Canvas canvas = context()->getCanvas();
-    canvas.drawCircle(pos, 2, "00FF00");
-    canvas.drawLine(pos, pos-moving.vel.normalize()*20, "00FF00", 1);
+    canvas.drawCircleInside(pos, 2, "00FF00");
+    canvas.drawLine(pos, pos - vel.normalize() * 20, "00FF00");
 }
 
 int Bullet::renderLayer() const {

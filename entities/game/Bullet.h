@@ -8,15 +8,13 @@
 #include "../Entity.h"
 #include "../../components/Moving.h"
 
-class Bullet : public Entity {
+class Bullet : public Entity, public Moving {
 public:
-    Bullet(ContextWeakPtr game, Vector startPos, Vector vel);
+    Bullet(ContextWeakPtr game, Vector pos, Vector vel);
     int renderLayer() const override;
     void draw() const override;
     void act(float dt) override;
     ~Bullet() override = default;
-private:
-    Moving moving;
 };
 
 #endif //COMPUTERSPIEL_BULLET_H

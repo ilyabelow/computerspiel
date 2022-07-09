@@ -14,6 +14,7 @@ struct Rect {
 
     Rect() = default;
     Rect(Point p1, Point p2): p1(p1), p2(p2) {}
+    Rect(Point p, int w, int h): p1(p), p2(p+Point(w, h)) {}
 
     [[nodiscard]] bool inside(const Point& p) const {
         return p > p1 && p < p2;

@@ -10,24 +10,31 @@
 #include "Exhaust.h"
 #include "../../math/Math.h"
 
-Player::Player(ContextWeakPtr game, Vector pos) : Entity(std::move(game), pos),
-                                                         moving(this),
-                                                         health(this, 100),
-                                                         exaustCooldown(0.025),
-                                                         gunCooldown(0.2) {}
+using namespace std::placeholders;
+
+Player::Player(ContextWeakPtr game, Vector pos) : Entity(std::move(game)),
+                                                  Moving(pos),
+                                                  Health(100),
+                                                  exaustCooldown(0.025),
+                                                  gunCooldown(0.2) {
+}
 
 void Player::draw() const {
     Canvas canvas = context()->getCanvas();
-    float angle = pull.angle() + M_PIf;
-    canvas.drawCircleLine(pos, RADIUS, "FF0000", 1);
-    Vector offset = std::abs(gunSide) * face.rotate(90_o);
-    canvas.drawLine(pos + face * RADIUS + offset, pos + face * (RADIUS + 10) + offset, "FF0000", 1);
-    canvas.drawLine(pos + face * RADIUS - offset, pos + face * (RADIUS + 10) - offset, "FF0000", 1);
+    float alpha = face.angle();
+    Vector p1 = (pos + Vector(30, 0).rotate(alpha));
+    Vector p2 = (pos + Vector(-20, -20).rotate(alpha));
+    Vector p3 = (pos + Vector(-10, 0).rotate(alpha));
+    Vector p4 = (pos + Vector(-20, 20).rotate(alpha));
 
+    canvas.drawLine(p1, p2, "FF0000");
+    canvas.drawLine(p2, p3, "FF0000");
+    canvas.drawLine(p3, p4, "FF0000");
+    canvas.drawLine(p4, p1, "FF0000");
 }
 
 void Player::act(float dt) {
-    moving.move(dt, calcAcc());
+    move(dt, calcAcc());
     constrain();
     shoot();
     exhaust();
@@ -43,33 +50,32 @@ void Player::shoot() {
         return;
     }
     if (mouse->isPressed(0)) {
-        Vector bulletPos = pos + face * (RADIUS + 20) + gunSide * face.rotate(90_o);
-        gunSide = -gunSide;
+        Vector bulletPos = pos + face * (RADIUS + 20) + face.rotate(90_o);
         context()->add<Bullet>(bulletPos, face * BULLET_SPEED);
         gunCooldown.wind();
     }
 }
 
 void Player::constrain() {
-    if (moving.vel.norm2() < 1) {
-        moving.vel = Vector();
+    if (vel.norm2() < 1) {
+        vel = Vector();
     }
     if (pos.x - RADIUS < 0) {
         pos.x = RADIUS;
-        moving.vel.x = 0;
+        vel.x = 0;
     }
     if (pos.y - RADIUS < 0) {
         pos.y = RADIUS;
-        moving.vel.y = 0;
+        vel.y = 0;
     }
     Point border = context()->getCanvas().rect().p2;
     if (pos.x + RADIUS > border.x) {
         pos.x = border.x - RADIUS;
-        moving.vel.x = 0;
+        vel.x = 0;
     }
     if (pos.y + RADIUS > border.y) {
         pos.y = border.y - RADIUS;
-        moving.vel.y = 0;
+        vel.y = 0;
     }
 }
 
@@ -94,9 +100,6 @@ void Player::exhaust() {
 int Player::renderLayer() const {
     return 5;
 }
-Vector Player::getPos() const {
-    return pos;
-}
 Vector Player::calcAcc() {
     pull = {};
     if (is_key_pressed(VK_DOWN)) {
@@ -115,7 +118,12 @@ Vector Player::calcAcc() {
     if (!pull.isZero()) {
         acc += THRUST * pull.normalize();
     }
-    acc -= RESISTANCE * moving.vel;
+    acc -= RESISTANCE * vel;
     return acc;
 }
 
+void Player::onHealthChanged(int health, int delta) {
+    if (health == 0) {
+        die();
+    }
+}

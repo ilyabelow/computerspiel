@@ -4,29 +4,30 @@
 
 #include "Health.h"
 
-Health::Health(Entity* entity, int maxHealth) :
-    entity(entity),
-    maxHealth(maxHealth),
-    health(maxHealth) {}
+Health::Health(int maxHealth) :
+maxHealth(maxHealth),
+currentHealth(maxHealth)
+{}
 
-Health::Health(Entity* entity, int health, int maxHealth) :
-    entity(entity),
-    maxHealth(maxHealth),
-    health(health) { }
 
 int Health::healthLeft() const {
-    return health;
+    return currentHealth;
 }
 
 void Health::hit(int dmg) {
-    health -= dmg;
-    if (health <= 0) {
-        entity->die();
+    int prevHealth= currentHealth;
+    currentHealth -= dmg;
+    if (currentHealth <= 0) {
+        currentHealth = 0;
     }
+    onHealthChanged(currentHealth, currentHealth - prevHealth);
 }
+
 void Health::heal(int up) {
-    health += up;
-    if (health > maxHealth) {
-        health = maxHealth;
+    int prevHealth = currentHealth;
+    currentHealth += up;
+    if (currentHealth > maxHealth) {
+        currentHealth = maxHealth;
     }
+    onHealthChanged(currentHealth, currentHealth - prevHealth);
 }

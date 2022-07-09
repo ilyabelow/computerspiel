@@ -8,11 +8,10 @@
 #include <utility>
 
 #include "NotRendered.h"
-#include "../../utils/Types.h"
 
 class Listener : public NotRendered {
 public:
-    Listener(ContextWeakPtr game, Callback ear) :
+    Listener(ContextWeakPtr game, std::function<void()> ear) :
         NotRendered(std::move(game)),
         ear(std::move(ear)) {}
 
@@ -21,7 +20,7 @@ public:
     }
     ~Listener() override = default;
 private:
-    Callback ear;
+    std::function<void()> ear;
 };
 
 #endif //COMPUTERSPIEL_LISTENER_H

@@ -48,7 +48,7 @@ public:
         return color[3];
     }
 
-    Color withBrightness(uint8_t a) const {
+    Color withOpacity(uint8_t a) const {
         return Color(red(), green(), blue(), a);
     }
 
@@ -90,13 +90,5 @@ private:
 };
 
 const Color WHITE = "FFFFFF";
-const Color BLACK = "000000";
-
-const Color RED = "FF0000";
-const Color GREEN = "00FF00";
-const Color BLUE = "0000FF";
-
-const Color YELLOW = "FFFF00";
-const Color PURPLE = "FF00FF";
 
 #endif //COMPUTERSPIEL_COLOR_H

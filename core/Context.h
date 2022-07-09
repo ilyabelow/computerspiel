@@ -6,7 +6,6 @@
 #define COMPUTERSPIEL_CONTEXT_H
 
 #include "../render/Canvas.h"
-#include "../math/Vector.h"
 
 #include <vector>
 #include <memory>
@@ -19,53 +18,48 @@ typedef std::weak_ptr<Context> ContextWeakPtr;
 typedef std::shared_ptr<Context> ContextPtr;
 
 #include "../entities/Entity.h"
-#include "../math/Rect.h"
 #include "../utils/Mouse.h"
 
-
-class Group: public std::vector<EntityPtr> {
+class Group : public std::vector<EntityPtr> {
 public:
     void takeOutTrash();
 };
 
-class Context: public std::enable_shared_from_this<Context> {
+class Context : public std::enable_shared_from_this<Context> {
 public:
     Context(Canvas canvas, MousePtr mouse);
 
     void act(float dt);
     void draw();
 
-    template <typename T, typename... Args>
-    std::shared_ptr<T> add(Args&&... args) {
-        std::shared_ptr<T> entity = std::make_shared<T>(weak_from_this(), std::forward<Args>(args)...);
-        actGroup.push_back(entity);
-        if (entity->renderLayer() >= 0) {
-            renderGroups[entity->renderLayer()].push_back(entity);
-        }
-        for (auto & name: entity->groupsNames()){
-            if (!groups.contains(name)) {
-                groups[name] = {};
-            }
-            groups[name].push_back(entity);
-        }
+    template<typename T, typename... Args>
+    std::shared_ptr<T> add(Args &&... args) {
+        std::shared_ptr<T> entity = create<T>(std::forward<Args>(args)...);
+        add(entity);
         return entity;
     }
 
+    template<typename T, typename... Args>
+    std::shared_ptr<T> create(Args &&... args) {
+        auto entity = std::make_shared<T>(weak_from_this(), std::forward<Args>(args)...);
+        return entity;
+    }
+
+    void add(const EntityPtr &entity);
+
     Canvas getCanvas();
     MousePtr getMouse();
-    Group& getGroup(const std::string& name);
+    Group &getGroup(const std::string &name);
 
 private:
     Canvas canvas;
     MousePtr mouse;
 
-    static const size_t LAYERS = 8;
-
     Group actGroup{};
+    static const size_t LAYERS = 8;
     std::array<Group, LAYERS> renderGroups;
     std::unordered_map<std::string, Group> groups;
 
 };
-
 
 #endif //COMPUTERSPIEL_CONTEXT_H

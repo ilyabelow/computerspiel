@@ -5,17 +5,11 @@
 #ifndef COMPUTERSPIEL_CLOCK_H
 #define COMPUTERSPIEL_CLOCK_H
 
-#include <functional>
-#include <utility>
-#include <vector>
-
-typedef std::function<void()> Callback;
-
 class Clock {
 public:
     Clock() : time(0), startTime(0) {}
 
-    Clock( float time) : time(0), startTime(time) {}
+    explicit Clock(float time) : time(0), startTime(time) {}
 
     void tick(float dt) {
         if (time == 0) {
@@ -27,7 +21,7 @@ public:
         }
     }
 
-    float timeLeft() const {
+    [[nodiscard]] float timeLeft() const {
         return time;
     }
 
@@ -39,11 +33,11 @@ public:
         time = start;
     }
 
-    bool isRunning() const{
+    [[nodiscard]] bool isRunning() const{
         return time > 0;
     }
 
-    bool isOver() const{
+    [[nodiscard]] bool isOver() const{
         return time == 0;
     }
 

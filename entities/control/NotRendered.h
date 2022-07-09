@@ -11,7 +11,7 @@
 
 class NotRendered: public Entity {
 public:
-    explicit NotRendered(ContextWeakPtr game): Entity(std::move(game), {0, 0}) {}
+    explicit NotRendered(ContextWeakPtr game): Entity(std::move(game)) {}
     void draw() const final {
 
     }

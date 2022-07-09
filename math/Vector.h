@@ -14,8 +14,8 @@ struct Vector;
 struct Vector {
     Vector() = default;
     Vector(float x, float y);
-    Vector(float phi);
-    Vector(const Point&  p);
+    explicit Vector(float phi);
+    Vector(const Point& p);
 
     Vector& operator+=(const Vector& other);
     [[nodiscard]] Vector operator+(const Vector& other) const;

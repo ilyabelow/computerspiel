@@ -6,19 +6,20 @@
 #define COMPUTERSPIEL_MOVING_H
 
 #include "../math/Vector.h"
-#include "../entities/Entity.h"
 
 class Moving {
 public:
-    explicit Moving(Entity* entity);
-    Moving(Entity* entity, Vector vel);
+    Vector getPos();
+protected:
+    explicit Moving(Vector pos);
+    Moving(Vector pos, Vector vel);
 
     void move(float dt);
 
     void move(float dt, Vector acc);
 
-    Entity* entity;
     Vector vel;
+    Vector pos;
 };
 
 #endif //COMPUTERSPIEL_MOVING_H
