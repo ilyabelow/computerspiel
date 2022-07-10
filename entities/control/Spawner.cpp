@@ -50,7 +50,7 @@ void Spawner::spawn() {
             waveFinished = true;
         }
     } else if (wave == 1) {
-        if (iter < 4) {
+        if (iter < 2) {
             std::shared_ptr<BigCircle> enemy = nullptr;
             if (iter == 0) {
                 enemy = context()->create<BigCircle>(
@@ -59,24 +59,11 @@ void Spawner::spawn() {
                     32
                 );
             }
+
             if (iter == 1) {
-                enemy = context()->create<BigCircle>(
-                    Vector(900, 100),
-                    Vector(-30, 40),
-                    32
-                );
-            }
-            if (iter == 2) {
                 enemy = context()->create<BigCircle>(
                     Vector(900, 700),
                     Vector(-40, -30),
-                    32
-                );
-            }
-            if (iter == 3) {
-                enemy = context()->create<BigCircle>(
-                    Vector(100, 700),
-                    Vector(40, -30),
                     32
                 );
             }

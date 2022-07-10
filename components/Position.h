@@ -9,11 +9,13 @@
 
 class Position {
 public:
-    explicit Position(Vector pos): pos(pos) {}
-
     [[nodiscard]] Vector getPos() const{
         return pos;
     }
+protected:
+    Position(Vector pos): pos(pos) {}
+
+
     Vector pos;
 };
 

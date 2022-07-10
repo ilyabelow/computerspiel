@@ -9,9 +9,8 @@
 #include "Position.h"
 
 class Moving: public Position {
-
 protected:
-    explicit Moving(Vector pos) : Position(pos), vel() {
+    Moving(Vector pos) : Position(pos), vel() {
 
     }
     Moving(Vector pos, Vector vel): Position(pos), vel(vel) {

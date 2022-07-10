@@ -24,7 +24,7 @@ public:
     void act(float dt) override {
         t += dt;
     }
-    int renderLayer() const override {
+    [[nodiscard]] int renderLayer() const override {
         return 1;
     }
     ~Title() override = default;
