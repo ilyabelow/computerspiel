@@ -23,6 +23,8 @@ float randomFloat(float from, float to);
 
 float atan2bound(float y, float x);
 
+float sinAbove0(float x);
+
 template <typename T>
 T sqr(T x) {
     return x*x;

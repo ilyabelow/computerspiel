@@ -18,8 +18,13 @@ public:
     void act(float dt) override {
 
     }
+
+    void changeText(const std::string& newText) {
+        text.text = newText;
+    }
+
     [[nodiscard]] int renderLayer() const override {
-        return 6;
+        return 7;
     }
     ~Label() override = default;
 private:

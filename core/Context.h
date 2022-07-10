@@ -23,6 +23,8 @@ typedef std::shared_ptr<Context> ContextPtr;
 class Group : public std::vector<EntityPtr> {
 public:
     void takeOutTrash();
+    void activate();
+    void deactivate();
 };
 
 class Context : public std::enable_shared_from_this<Context> {
@@ -46,10 +48,11 @@ public:
     }
 
     void add(const EntityPtr &entity);
+    void reg(const EntityPtr &entity, const std::vector<std::string>& names);
 
     Canvas getCanvas();
     MousePtr getMouse();
-    Group &getGroup(const std::string &name);
+    Group &getGroup(const std::string& name);
 
 private:
     Canvas canvas;

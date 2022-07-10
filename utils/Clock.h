@@ -7,43 +7,29 @@
 
 class Clock {
 public:
-    Clock() : time(0), startTime(0) {}
+    Clock();
 
-    explicit Clock(float time) : time(0), startTime(time) {}
+    explicit Clock(float time);
 
-    void tick(float dt) {
-        if (time == 0) {
-            return;
-        }
-        time -= dt;
-        if (time <= 0) {
-            time = 0;
-        }
-    }
+    void tick(float dt);
 
-    [[nodiscard]] float timeLeft() const {
-        return time;
-    }
+    [[nodiscard]] float timeLeft() const;
 
-    void wind() {
-        time = startTime;
-    }
+    [[nodiscard]] float timeTotal() const;
 
-    void wind(float start) {
-        time = start;
-    }
+    [[nodiscard]] float percentage() const;
 
-    [[nodiscard]] bool isRunning() const{
-        return time > 0;
-    }
+    [[nodiscard]] int percentageInt(int multiplier) const;
 
-    [[nodiscard]] bool isOver() const{
-        return time == 0;
-    }
+    void wind();
 
-    void stop() {
-        time = 0;
-    }
+    void changeTime(float start);
+
+    [[nodiscard]] bool isRunning() const;
+
+    [[nodiscard]] bool isOver() const;
+
+    void stop();
 
 private:
     float startTime;

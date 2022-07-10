@@ -40,17 +40,6 @@ void Canvas::drawRect(Point p1, Point p2, Color c) {
     }
 }
 
-void Canvas::drawRect(Point center, int w, int h, Color c) {
-    int left = center.x - w / 2;
-    int right = center.x + w / 2;
-    int up = center.y - h / 2;
-    int down = center.y + h / 2;
-    for (int x = left; x < right; ++x) {
-        for (int y = up; y < down; ++y) {
-            placePixel(x, y, c);
-        }
-    }
-}
 void Canvas::drawCircleInside(Point center, float r, Color c) {
     for (int y = -r; y < r; ++y) {
         int len = std::sqrt(sqr(r) - sqr(y));
@@ -218,6 +207,9 @@ void Canvas::drawRotatedRectLine(Point center, int w, int h, float phi, Color c)
     drawLine(centerV + ur, centerV + ul, c);
 }
 
-void Canvas::drawRotatedRectInside(Point center, int w, int h, float phi, Color c) {
-
+void Canvas::drawPolygon(Point pos, const std::vector<Point>& outline, Color c) {
+    for (int i = 1; i < outline.size(); i++) {
+        drawLine(pos + outline[i - 1], pos + outline[i], c);
+    }
+    drawLine(pos + outline[0], pos + outline[outline.size() - 1], c);
 }

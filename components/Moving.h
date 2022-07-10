@@ -6,20 +6,28 @@
 #define COMPUTERSPIEL_MOVING_H
 
 #include "../math/Vector.h"
+#include "Position.h"
 
-class Moving {
-public:
-    Vector getPos();
+class Moving: public Position {
+
 protected:
-    explicit Moving(Vector pos);
-    Moving(Vector pos, Vector vel);
+    explicit Moving(Vector pos) : Position(pos), vel() {
 
-    void move(float dt);
+    }
+    Moving(Vector pos, Vector vel): Position(pos), vel(vel) {
 
-    void move(float dt, Vector acc);
+    }
+
+    void move(float dt) {
+        pos += vel * dt;
+    }
+
+    void move(float dt, Vector acc){
+        vel += acc * dt;
+        pos += dt * vel;
+    }
 
     Vector vel;
-    Vector pos;
 };
 
 #endif //COMPUTERSPIEL_MOVING_H

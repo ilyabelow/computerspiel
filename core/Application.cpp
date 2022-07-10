@@ -6,16 +6,20 @@
 #include <cassert>
 #include <utility>
 #include "Application.h"
-#include "../entities/ui/Button.h"
-#include "../entities/ui/Label.h"
-#include "../entities/game/Player.h"
-#include "../entities/control/Listener.h"
 
 #include "../Engine.h"
+
+#include "../entities/game/Player.h"
 #include "../entities/game/Background.h"
-#include "../entities/game/enemies/Enemy.h"
+
+#include "../entities/control/Listener.h"
 #include "../entities/control/Spawner.h"
+#include "../entities/control/Score.h"
+
+#include "../entities/ui/Label.h"
 #include "../entities/ui/Title.h"
+#include "../entities/ui/Button.h"
+#include "../entities/ui/Plate.h"
 
 Application::Application(const Canvas &screen) :
     canvas(screen),
@@ -66,15 +70,47 @@ void Application::initGame() {
     game = std::make_shared<Context>(canvas, mouse);
 
     auto player = game->add<Player>(Vector(canvas.width / 2, 500));
-
-    game->add<Listener>([this]() {
+    auto score = game->add<Score>();
+    auto exiter = game->add<Listener>([this]() {
         if (is_key_pressed(VK_ESCAPE)) {
             pauseGame();
         }
     });
+    game->reg(
+        exiter,
+        {"exiter"}
+    );
     game->add<Spawner>();
 
+    int text_size = 100;
+    auto gameOverLabel = game->add<Label>(Point(canvas.width/2-text_size*5, canvas.height/2-text_size/2),
+                                          Text("GAME OVER!", text_size, WHITE));
+    auto youWinLabel = game->add<Label>(Point(canvas.width/2-text_size*4, canvas.height/2-text_size/2),
+                                          Text("YOU WIN!", text_size, WHITE));
+    auto gameOverListener = game->add<Listener>([this](){
+        if (is_key_pressed(VK_ESCAPE)) {
+            quitGame();
+        } else if (is_key_pressed(VK_RETURN)) {
+            startGame();
+        }
+    }) ;
+    game->reg(
+        gameOverLabel,
+        {"game_over", "game_end"}
+        );
+    game->reg(
+        youWinLabel,
+        {"you_win", "game_end"}
+    );
+    game->reg(
+        gameOverListener,
+        {"game_over", "game_end", "you_win"}
+    );
+    game->getGroup("game_end").deactivate();
+
     game->add<Background>(player);
+
+
 }
 
 void Application::initMenu() {

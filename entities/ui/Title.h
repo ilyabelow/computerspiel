@@ -7,13 +7,13 @@
 
 #include <utility>
 
-#include "../../components/Moving.h"
+#include "../../components/Position.h"
 #include "../Entity.h"
 #include "../../math/Math.h"
 
-class Title: public Entity, public Moving {
+class Title: public Entity, public Position {
 public:
-    Title(ContextWeakPtr game, Point pos):Entity(std::move(game)), Moving(pos) {}
+    Title(ContextWeakPtr game, Point pos):Entity(std::move(game)), Position(pos) {}
 
     void draw() const override {
         Vector shiftedPos = pos + Vector(0, OSCILLATION*(1+std::sin(t)));

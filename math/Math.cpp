@@ -15,7 +15,9 @@ float random_0_1() {
     return static_cast<float>(std::rand()) / RAND_MAX;
 }
 int randomInt(int from, int to) {
-    return from + static_cast<int>(random_0_1() * (to - from));
+    int dist = to-from+1;
+    int rem = std::rand() % dist;
+    return from + rem;
 }
 float randomFloat(float from, float to) {
     return from + random_0_1() * (to - from);
@@ -26,4 +28,7 @@ float atan2bound(float y, float x) {
         phi += M_TAUf;
     }
     return phi;
+}
+float sinAbove0(float x) {
+    return (1 + std::sin(x)) / 2;
 }

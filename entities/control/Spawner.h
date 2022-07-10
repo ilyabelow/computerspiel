@@ -10,14 +10,21 @@
 
 class Spawner : public NotRendered {
 public:
-    Spawner(ContextWeakPtr game);
+    explicit Spawner(ContextWeakPtr game);
 
     void act(float dt) override;
 
     ~Spawner() override = default;
 private:
-    Clock spawn{};
+    void spawn();
+
+    Clock spawnClock{};
     int iter = 0;
+    int wave = 0;
+    bool waveFinished = false;
+
+    static const int wavesTotal = 4;
+    constexpr static const std::array<float, wavesTotal> waveTimes = {.5,2,.2,1.5};
 };
 
 #endif //COMPUTERSPIEL_SPAWNER_H

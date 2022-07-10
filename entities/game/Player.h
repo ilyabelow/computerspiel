@@ -10,32 +10,44 @@
 #include "../../utils/Clock.h"
 #include "../../components/Moving.h"
 #include "../../components/Health.h"
+#include "../../components/Collider.h"
+#include "../ui/Label.h"
 
-class Player : public Entity, public Health, public Moving {
+class Player : public Entity, public Health, public Moving, public Collider {
 public:
     Player(ContextWeakPtr game, Vector pos);
-    int renderLayer() const override;
+    [[nodiscard]] int renderLayer() const override;
     void draw() const override;
     void act(float dt) override;
+    [[nodiscard]] std::vector<std::string> groupsNames() const override;
 
     ~Player() override = default;
+
+    void changeGunParams(float bulletSpeedfactor, float cooldownFactor, float bulletSizeFactor);
 private:
     Vector calcAcc();
     void constrain();
     void shoot();
     void exhaust();
-
+    void explode();
+    int pendingHit(int dmg) override;
     void onHealthChanged(int health, int delta) override;
     Vector pull{};
     Vector face{};
 
     Clock exaustCooldown;
     Clock gunCooldown;
+    Clock invincibility;
 
     const float THRUST = 1000;
     const float RESISTANCE = 3;
-    const float RADIUS = 30;
-    const float BULLET_SPEED = 500;
+    constexpr static const float RADIUS = 30;
+
+    float gunCooldownSpeed = 0.2;
+    float bulletSpeed = 500;
+    float bulletSize = 2;
+
+    std::shared_ptr<Label> hpLabel;
 };
 
 #endif //COMPUTERSPIEL_PLAYER_H

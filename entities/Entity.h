@@ -30,10 +30,18 @@ public:
     [[nodiscard]] bool isZombie() const {
         return zombie;
     }
+    [[nodiscard]] bool isActive() const {
+        return active;
+    }
     void die() {
         zombie = true;
     }
-
+    void activate() {
+        active = true;
+    }
+    void deactivate() {
+        active = false;
+    }
     virtual ~Entity() = default;
 protected:
     [[nodiscard]] ContextPtr context() const {
@@ -43,6 +51,7 @@ private:
     ContextWeakPtr game;
 
     bool zombie = false;
+    bool active = true;
 };
 
 

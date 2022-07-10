@@ -213,6 +213,10 @@ void Canvas::drawText(Point start, const std::string &text, int s, Color c) {
                 drawLine(pos + Point(5*s/8, 0), pos  + Point(s/2, 3*s/4), c);
                 drawArc(pos+Point(s/2, 15*s/16), s/16, 0, 2*M_PIf, c);
                 break;
+            case ':':
+                drawCircleLine(pos+Point(s/2, 1*s/8), s/8, c);
+                drawCircleLine(pos+Point(s/2, 7*s/8), s/8, c);
+                break;
             case ' ':
                 break;
             default:

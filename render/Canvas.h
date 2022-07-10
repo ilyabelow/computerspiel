@@ -25,10 +25,8 @@ public:
 
     void drawRect(Point p1, Point p2, Color c);
     void drawRect(Rect rect, Color c);
-    void drawRect(Point center, int w, int h, Color c);
-
-    void drawRotatedRectInside(Point center, int w, int h, float phi, Color c);
     void drawRotatedRectLine(Point center, int w, int h, float phi, Color c);
+    void drawPolygon(Point pos,const std::vector<Point>& outline, Color c);
 
     void drawCircleInside(Point center, float r, Color c);
     void drawCircleLine(Point center, float r, Color c);

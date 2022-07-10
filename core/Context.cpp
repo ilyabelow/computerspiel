@@ -4,15 +4,15 @@
 
 #include "Context.h"
 
-#include <utility>
-
 Context::Context(Canvas canvas, MousePtr mouse) :
     canvas(canvas),
     mouse(std::move(mouse)) {}
 
 void Context::act(float dt) {
     for (int i = 0; i < actGroup.size(); ++i) {
-        actGroup[i]->act(dt);
+        if (actGroup[i]->isActive() && !actGroup[i]->isZombie()) {
+            actGroup[i]->act(dt);
+        }
     }
     actGroup.takeOutTrash();
     for (auto &layer: renderGroups) {
@@ -27,7 +27,9 @@ void Context::draw() {
     for (int l = 0; l < LAYERS; l++) {
         auto &layer = renderGroups[l];
         for (int i = 0; i < layer.size(); ++i) {
-            layer[i]->draw();
+            if (layer[i]->isActive() && !layer[i]->isZombie()) {
+                layer[i]->draw();
+            }
         }
     }
 }
@@ -40,7 +42,7 @@ MousePtr Context::getMouse() {
     return mouse;
 }
 
-Group &Context::getGroup(const std::string &name) {
+Group &Context::getGroup(const std::string& name) {
     return groups[name];
 }
 
@@ -49,7 +51,11 @@ void Context::add(const EntityPtr &entity) {
     if (entity->renderLayer() >= 0) {
         renderGroups[entity->renderLayer()].push_back(entity);
     }
-    for (auto &name: entity->groupsNames()) {
+    reg(entity, entity->groupsNames());
+}
+
+void Context::reg(const EntityPtr &entity, const std::vector<std::string>& names) {
+    for (auto &name: names) {
         if (!groups.contains(name)) {
             groups[name] = {};
         }
@@ -65,5 +71,15 @@ void Group::takeOutTrash() {
             pop_back();
         }
         i++;
+    }
+}
+void Group::activate() {
+    for (auto& entity: *this) {
+        entity->activate();
+    }
+}
+void Group::deactivate() {
+    for (auto& entity: *this) {
+        entity->deactivate();
     }
 }

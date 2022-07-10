@@ -12,6 +12,10 @@ struct Text {
     std::string text;
     int size;
     Color color;
+
+    [[nodiscard]] int width() const {
+        return size * static_cast<int>(text.size());
+    }
 };
 
 #endif //COMPUTERSPIEL_TEXT_H
