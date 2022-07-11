@@ -19,7 +19,7 @@ void Spawner::act(float dt) {
             spawn();
         }
     } else if (context()->getGroup("enemy").empty() && context()->getGroup("egg").empty()) {
-        if (wave == wavesTotal) {
+        if (wave == wavesTotal-1) {
             deactivate();
             if (context()->getGroup("game_over")[0]->isActive()) {
                 return;
